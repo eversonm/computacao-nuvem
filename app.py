@@ -9,7 +9,7 @@ from mariadbconn import mysql
 from graphspython import *
 from s3folder import upload_dir_s3
 from html_reports import save_report
-from dynAccess import *
+from dynamo import *
 from datetime import datetime
 import os
 import sys
