@@ -1,0 +1,113 @@
+<html>
+<head>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+<style>
+.dropbtn {
+  background-color: #4c7aad;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {background-color: #ddd;}
+
+.dropdown:hover .dropdown-content {display: block;}
+
+.dropdown:hover .dropbtn {background-color: red;}
+</style>
+</head>
+  <body>
+    <h1>Tuplas do Arquivo</h1>
+    <!-- <table class='table table-resposive table-hover'> -->
+      {% for table in tables %}
+        <form method="POST" action="/application">
+          <tr>
+            <!-- {titles[loop.index]}} -->
+            {{ table|safe }}
+          </tr>
+        </form>
+      {% endfor %}
+    <!-- </table> -->
+    <h2>Gráficos</h2>
+    <p>Para criar um gráfico selecione o(s) atributo(s) baseado na seguinte configuração</p>
+    <ul>
+      <li>Gráfico de barra, barrah, linha, boxplot e histograma usam apenas o primeiro atributo</li>
+      <li>Gráfico scatterplot precisa de dois atributos, um para eixo X e outro para eixo Y</li>
+      <li>Gráfico scattergeo precisa de atributos latitude e longitude</li>
+    </ul>
+    <form method="POST" action="/application">
+      <div class="dropdown">
+        <button class="dropbtn">Atributo X</button>
+        <div class="dropdown-content">
+          {% for item in titles %}
+
+            <!-- <a href="#" value="{{item}}" name='attr'>{{titles[loop.index]}}</a> -->
+            <input type="radio" class="radio1" value="{{item}}" name='attr1' id="checks1">
+            <label for="checks1"> {{item}}</label><br>
+          {% endfor%}
+        </div>
+      </div>
+      <div class="dropdown">
+        <button class="dropbtn">Atributo Y</button>
+        <div class="dropdown-content">
+          {% for item2 in titles %}
+            <input type="radio" class="radio2" value="{{item2}}" name='attr2' id="checks">
+            <label for="checks"> {{item2}}</label><br>
+          {% endfor%}
+        </div>
+
+      </div>
+      <div class="dropdown">
+        <button class="dropbtn">Gráfico</button>
+        <div class="dropdown-content">
+          {% for item3 in graphs %}
+            <input type="radio" class="radio2" value="{{item3}}" name='attr3' id="checks">
+            <label for="checks"> {{item3}}</label><br>
+          {% endfor%}
+        </div>
+
+      </div>
+      <input type="hidden" value="{{item,item2}}" name="infose">
+      <input type="submit" name="graph1" value="plot-graph">
+    </form>
+    <h3>Deseja Salvar no banco de dados?</h3>
+    {% if fig %}
+    {{fig.show()}}
+    {% endif %}
+      <form method="POST" action="/application">
+        <input type="submit" value="Salvar" name="savedb">
+      </form>
+      <form method="POST">
+        <input type="submit" value="Voltar Para Listagem" name="returnl">
+      </form>
+  </body>
+  <script type="text/javascript">
+    $(document).ready(function(){
+      $('table').addClass('table table-hover table-responsive');
+    });
+    // $('#checks1:checked').val()
+  </script>
+ </html>

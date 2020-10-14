@@ -1,0 +1,15 @@
+<html>
+  <body>
+    <h1>Listagem dos Arquivos</h1>
+      <table>
+      {% for file in files %}
+        <form method="POST">
+          <tr>
+            <input type="submit" value="{{file}}" name="nfile">
+          </tr>
+        </form>
+      </table>
+      {% endfor %}
+    <h4><a href="/home">Voltar para página inicial</a></h4>
+  </body>
+</html>

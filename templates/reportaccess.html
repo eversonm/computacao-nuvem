@@ -1,0 +1,58 @@
+<html>
+<head>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+<style>
+.dropbtn {
+  background-color: #4c7aad;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {background-color: #ddd;}
+
+.dropdown:hover .dropdown-content {display: block;}
+
+.dropdown:hover .dropbtn {background-color: red;}
+</style>
+</head>
+  <body>
+    <h1 class='text-center'>Informações de Acesso a API</h2>
+    {% for item in description['data'][0]['columns'] %}
+        <div class='box'>
+          <p class='text-center'>Nome da Tabela: {{item['name']}}, Descrição: {{item['description']}}, Horario de Acesso: {{item['type']}}</p>
+        </div>
+    {% endfor %}
+    <div style="text-align:center;">
+      <h3>Deseja baixar o(s) arquivo(s) localmente e enviá-lo(s) para o S3?</h3>
+        <form method="POST">
+          <input style="text-align:center;"type="submit" value="Salvar" name="baixar">
+        </form>
+        <a href="/home">Voltar para a Página inicial</a>
+    </div>
+
+  </body>
+ </html>

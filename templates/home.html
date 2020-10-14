@@ -1,0 +1,61 @@
+<html>
+<head>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+</head>
+<style type="text/css">
+	.box{
+		box-shadow: 0 1px 12px rgba(0,0,0,.5);
+		padding: 10px 20px;
+		margin: 15px 5px;
+	}
+	.box h3, .box p, .box input{
+		margin: 5px 0;
+	}
+	input[type='submit']{
+		padding: 5px;
+		color: #fff;
+		background: #007bff;
+		margin: 2px;
+		border: 1px solid #4c7aad;
+		border-radius: 3px;
+	}
+	form{
+		margin: 0;
+	}
+	#box-btn form{
+		display: inline-block;
+	}
+</style>
+  <body>
+    <h1 class='text-center'>Principais Tags no Kaggle</h1>
+    <table>
+		<div class='box' id="box-btn">    
+      		{% for tag in tags %}
+        <form method="POST" action="/home">
+            <input type="submit" value="{{tag}}" name="newtag">
+        </form>
+      		{% endfor %}
+  		</div>
+      <h1>Entre com uma chave de busca</h1>
+        <form method="POST" action="/home">
+        	<input type="text" name="searchtag">
+          	<input type="submit" value="Buscar">
+        </form>
+      <h1 class='text-center'>Datasets</h1>
+      {% for item in get_ref %}
+        <form method="POST" action="/home">
+          <div class='box'>
+            <h3 value="{{item['title']}}" name="newtitle">{{item.title}}</h3>
+            {% if item["tags"][0]["description"]!= None %}
+            <p>{{item["tags"][0]["description"]}}<p>
+            {% endif %}
+            <input type="hidden" value="{{item['ref']}}" name="info">
+            <input type="submit" value="preview" name="file">
+          </div>
+        </form>
+      {% endfor %}
+    </table>
+  </body>
+
+</html>

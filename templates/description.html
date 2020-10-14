@@ -1,0 +1,30 @@
+<html>
+  <body>
+    <h1>Principais Tags no Kaggle</h1>
+    <table>
+      {% for tag in tags %}
+        <form method="POST" action="/home">
+          <tr>
+            <input type="submit" value="{{tag}}" name="newtag">
+          </tr>
+        </form>
+      {% endfor %}
+      <h1>Datasets</h1>
+      {% for item in lista %}
+        <form method="POST" action="/home">
+          <tr>
+            <h3 value="{{item.title}}" name="newtitle">{{item.title}}</h3>
+            <p value="{{item.description}}" name="newtitle">{{item.description}}</p>
+            <input type="submit" value="Select" name="newtag">
+          </tr>
+        </form>
+      {% endfor %}
+    </table>
+    <h1>Entre com uma chave de busca</h1>
+    <form method="POST" action="/home">
+      <input type="text" name="title">
+      <input type="submit" value="Add">
+    </form>
+
+  </body>
+</html>
