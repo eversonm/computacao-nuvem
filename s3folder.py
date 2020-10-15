@@ -8,7 +8,7 @@ destination = 'datasets/'
 def upload_dir_s3(local_dir='datasets/',bucket='computacao-nuvem',destination='datasets/'):
     client = boto3.client('s3')
     # enumerate local files recursively
-    for root, dirs, files in os.walk(local_directory):
+    for root, dirs, files in os.walk(local_dir):
 
         for filename in files:
 
@@ -16,7 +16,7 @@ def upload_dir_s3(local_dir='datasets/',bucket='computacao-nuvem',destination='d
             local_path = os.path.join(root, filename)
 
             # construct the full Dropbox path
-            relative_path = os.path.relpath(local_path, local_directory)
+            relative_path = os.path.relpath(local_path, local_dir)
             s3_path = os.path.join(destination, relative_path)
 
             # relative_path = os.path.relpath(os.path.join(root, filename))

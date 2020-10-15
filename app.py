@@ -1,4 +1,4 @@
-from flask import Blueprint, Flask, request , abort , redirect , Response ,url_for, render_template
+from flask import Blueprint, Flask, request, abort, redirect, Response ,url_for, render_template, flash
 from flask_login import LoginManager , login_required , UserMixin , login_user, current_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
@@ -79,7 +79,21 @@ tags = [
         'nlp',
         'health'
 ]
-graphs = ["barra","barrah","linha","histograma","boxplot","setores","scatterplot","scattergeo", "linha-ano", "linha-mes"]
+graphs = [
+    "barra",
+    "barrah",
+    "linha",
+    "histograma",
+    "boxplot",
+    "setores",
+    "scatterplot",
+    "scattergeo", 
+    "linha-ano", 
+    "linha-mes", 
+    "linha-semana", 
+    "linha-combinado"
+]
+
 api = KaggleApi()
 api.authenticate()
 
@@ -96,7 +110,7 @@ def create_table_query(owner = 'everson', dataset_name = 'malware', namefile="fi
             break
     df_name = str('_')+description['name'].replace('.csv','_')
     df_name = RX.sub('', df_name)
-    df_name = df_name.replace('[','').replace(']','')
+    df_name = df_name.replace('[','').replace(']','').replace(' ', '')
     
     query = "CREATE TABLE IF NOT EXISTS "+df_name+' ('
     
@@ -242,6 +256,7 @@ def application():
 
     dataframe = pd.read_csv(name_f["name"])
     dados = dataframe.head()
+    statistics = dataframe.describe()
 
     if request.form.get("returnl"):
         return redirect(url_for('.list_files', messages=returnlistfilesnow))
@@ -251,12 +266,23 @@ def application():
         table = create_table_query(owner=owner, dataset_name=dataset_name, namefile=name_f['name'].split("/")[-1])
         execute_query_create_table(table['query'])
         insertDB(arquivo = name_file, tabela=table['table_name'])
+        flash("Arquivo inserido com Sucesso no banco")
         return render_template("savedb.html")
 
     if (attr1 or attr2) and tipo_grafico:
         fig = pĺot_graphs_front(dataframe, attr1, attr2, tipo_grafico)
-        return render_template("summary.html", tables=[dados.to_html(classes='data')], titles=dados.columns.values, fig=fig.show(), graphs=graphs)
-    return render_template("summary.html", tables=[dados.to_html(classes='data')], titles=dados.columns.values, fig=None, graphs=graphs)
+        return render_template(
+            "summary.html", 
+            summary=[statistics.to_html(classes='data')],
+            tables=[dados.to_html(classes='data')], 
+            titles=dados.columns.values, 
+            fig=fig.show(), graphs=graphs)
+    return render_template(
+        "summary.html",
+        summary=[statistics.to_html(classes='data')], 
+        tables=[dados.to_html(classes='data')], 
+        titles=dados.columns.values, 
+        fig=None, graphs=graphs)
 
     #return render_template("summary.html", tables=[dados.to_html(classes='data')], titles=dados.columns.values)
 
@@ -293,8 +319,11 @@ def signup_post():
 
     new_user = User(email=email, username=username, password=generate_password_hash(password, method='sha256'))
 
-    db.session.add(new_user)
-    db.session.commit()
+    if email and username and password:
+        db.session.add(new_user)
+        db.session.commit()
+        flash('User successfully registered!!')
+        return render_template('signup.html')
 
     return render_template('signup.html')
 
@@ -307,6 +336,7 @@ def reports():
     df = df.sort_values(by=['horarioacesso'], ascending=False)
     if request.form.get("pdfsave"):
         save_report(df)
+        upload_dir_s3(local_dir='reports/',bucket='computacao-nuvem',destination='reports/')
         return render_template('relatorio.html', df=df)
 
     return render_template('relatorio.html', df=df)
